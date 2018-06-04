@@ -1,0 +1,8 @@
+language: java
+
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle
+
+script: ./gradlew wrapper --gradle-version 4.7 clean test --stacktrace

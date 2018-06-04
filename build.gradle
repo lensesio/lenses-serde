@@ -1,0 +1,121 @@
+buildscript {
+    ext.avro_version = '1.8.2'
+}
+
+plugins {
+    id 'net.researchgate.release' version '2.7.0'
+}
+
+allprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: "jacoco"
+    apply plugin: 'signing'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    group 'com.landoop'
+
+    repositories {
+        mavenCentral()
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
+    dependencies {
+        compile "org.apache.avro:avro:$avro_version"
+    }
+
+    release {
+        failOnPublishNeeded = false
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    build {
+        afterReleaseBuild.dependsOn uploadArchives
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            xml.destination "${buildDir}/reports/jacoco/report.xml"
+            csv.enabled false
+            html.destination "${buildDir}/jacocoHtml"
+        }
+    }
+
+    signing {
+        sign configurations.archives
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    name 'lenses-serde'
+                    packaging 'jar'
+                    description 'Lenses Serde'
+                    url 'http://www.github.com/landoop/lenses-serde'
+
+                    scm {
+                        connection 'scm:git:http://www.github.com/landoop/lenses-serde/'
+                        developerConnection 'scm:git:http://github.com/landoop/'
+                        url 'http://www.github.com/landoop/lenses-serde/'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The Apache 2.0 License'
+                            url 'https://opensource.org/licenses/Apache-2.0'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'sksamuel'
+                            name = 'Stephen Samuel'
+                            email = 'sam@landoop.com'
+                        }
+                        developer {
+                            id = 'stheppi'
+                            name = 'Stefan Bocutiu'
+                            email = 'stefan@landoop.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
