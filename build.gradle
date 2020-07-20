@@ -1,5 +1,5 @@
 buildscript {
-    ext.avro_version = '1.8.2'
+    ext.avro_version = '1.9.2'
 }
 
 plugins {
@@ -17,7 +17,7 @@ allprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    group 'com.landoop'
+    group 'io.lenses'
 
     repositories {
         mavenCentral()
@@ -87,12 +87,12 @@ allprojects {
                     name 'lenses-serde'
                     packaging 'jar'
                     description 'Lenses Serde'
-                    url 'http://www.github.com/landoop/lenses-serde'
+                    url 'http://www.github.com/lensesio/lenses-serde'
 
                     scm {
-                        connection 'scm:git:http://www.github.com/landoop/lenses-serde/'
-                        developerConnection 'scm:git:http://github.com/landoop/'
-                        url 'http://www.github.com/landoop/lenses-serde/'
+                        connection 'scm:git:http://www.github.com/lensesio/lenses-serde/'
+                        developerConnection 'scm:git:http://github.com/lensesio/'
+                        url 'http://www.github.com/lensesio/lenses-serde/'
                     }
 
                     licenses {

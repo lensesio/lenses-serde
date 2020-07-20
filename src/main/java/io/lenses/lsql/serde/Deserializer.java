@@ -1,4 +1,4 @@
-package com.landoop.lenses.lsql.serde;
+package io.lenses.lsql.serde;
 
 import org.apache.avro.generic.GenericRecord;
 
